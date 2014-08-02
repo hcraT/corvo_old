@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title></title>
+  <script src="js/jquery-2.1.1.min.js"></script>
+  <script src="js/buffer-loader.js"></script>
+  <link rel="stylesheet" type="text/css" href="css/style.css"/>
+</head>
+<body>
+
+ <div class="flashlight"></div>
+ <div class="sheet"></div>
+<script>
+  var context,
+      bufferLoader;
+
+  function init() {
+    // Fix up prefixing
+    window.AudioContext = window.AudioContext || window.webkitAudioContext;
+    context = new AudioContext();
+
+    bufferLoader = new BufferLoader(
+        context,
+        [
+        '/music/voice01.ogg',
+        '/music/Poe_take01.ogg'
+        ],
+        finishedLoading
+        );
+
+    bufferLoader.load();
+  }
+
+  function finishedLoading(bufferList) {
+    // Create two sources and play them both together.
+    var source1 = context.createBufferSource();
+    var source2 = context.createBufferSource();
+    source1.buffer = bufferList[0];
+    source2.buffer = bufferList[1];
+
+    source1.connect(context.destination);
+    source2.connect(context.destination);
+    source2.start(0);
+
+    window.setTimeout(function () {
+        source1.start(0);
+    }, 5000);
+  }
+
+  $(".sheet").click(init);
+
+</script>
+ <script>
+   var fLight = $(".flashlight");
+   console.log($('.flashlight'));
+   // $(document).mousemove(function(e){
+   //   fLight.css({
+   //     top: e.pageY + "px",
+   //     left: e.pageX + "px"
+   //   });
+   // });
+ </script>
+</body>
+</html>
